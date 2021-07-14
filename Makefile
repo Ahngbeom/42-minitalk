@@ -8,12 +8,12 @@ CFLAGS		= -Wall -Werror -Wextra
 INCFLAGS 	= -I./includes -I./libft
 
 LIBFT_PATH	= ./libft/
-LIBFT_FILES = ft_putstr_fd.c ft_putnbr_fd.c ft_atoi.c
+LIBFT_FILES = ft_putchar_fd.c ft_putstr_fd.c ft_putnbr_fd.c ft_atoi.c
 LIBFT_SRCS	= $(addprefix $(LIBFT_PATH), $(LIBFT_FILES))
 LIBFT_OBJS	= $(LIBFT_SRCS:.c=.o)
 
 SERVER_PATH	= ./srcs/
-SERVER_FILES = server.c
+SERVER_FILES = server.c server_handler.c
 SERVER_SRCS	= $(addprefix $(SERVER_PATH), $(SERVER_FILES))
 SERVER_OBJS	= $(SERVER_SRCS:.c=.o)
 

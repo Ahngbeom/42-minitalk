@@ -52,3 +52,21 @@
 				server_signal 이라는 전역 변수를 선언하여
 				SIGUSR2 신호의 핸들러 함수에서 server_signal 변수 값을 조작하며
 				다음 동작을 이어서 수행할 수 있도록 한다.
+
+![image](https://user-images.githubusercontent.com/57256332/125564893-334c265e-b30b-4b9c-9b33-2418fef16f80.png)
+
+# sigaction
+
+- SA_SIGINFO
+
+	sa_flags에 SA_SIGINFO 플래그를 지정하면 시그널이 발생할 원인을 알 수 있다.
+	sigaction 구조체에서 시그널 핸들러를 지정할 때 sa_handler 대신 sa_sigaction을 사용한다.
+	시그널 핸들러는 다음과 같이 인자 3개를 받는 형태로 정의되어진다.
+
+	```c
+	void handler(int signo, siginfo_t *siginfo, ucontext_t *context);
+
+	signo : 시그널 핸들러를 호출할 시그널
+	siginfo : 시그널이 발생한 원인을 담은 siginfo_t 구조체 포인터
+	context : 시그널이 전달될 때 시그널을 받는 프로세스의 내부 상태를 담은 ucontext_t 구조체 포인터
+	```
