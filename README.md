@@ -66,7 +66,36 @@
 	```c
 	void handler(int signo, siginfo_t *siginfo, ucontext_t *context);
 
-	signo : 시그널 핸들러를 호출할 시그널
-	siginfo : 시그널이 발생한 원인을 담은 siginfo_t 구조체 포인터
-	context : 시그널이 전달될 때 시그널을 받는 프로세스의 내부 상태를 담은 ucontext_t 구조체 포인터
+	// signo : 시그널 핸들러를 호출할 시그널
+	// siginfo : 시그널이 발생한 원인을 담은 siginfo_t 구조체 포인터
+	// context : 시그널이 전달될 때 시그널을 받는 프로세스의 내부 상태를 담은 ucontext_t 구조체 포인터
 	```
+# Text for TEST
+
+- Ascii
+
+	- 100자 (100 byte)
+
+			LoremipsumdolorsitametLoremipsumdolorsitametLoremipsumdolorsitametLoremipsumdolorsitametLoremipsumdo
+
+	- 3,278 자 (3,278 byte)
+
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras efficitur scelerisque diam et placerat. Aenean lacinia facilisis egestas. Nulla fringilla velit sem, eu molestie odio porttitor id. Nulla et elit mollis, porta lorem at, cursus orci. Pellentesque id ultricies diam, in auctor erat. Nunc blandit lorem est, vitae pellentesque lacus tempus quis. Duis consectetur et mi in egestas. Sed vestibulum aliquet interdum. Duis quis neque vel erat placerat fermentum nec at lectus. In varius bibendum neque. Cras hendrerit mi vel tortor vestibulum finibus.
+
+			Ut blandit lorem quam, ac interdum risus euismod ac. Pellentesque nec augue lacus. Vivamus lacus nunc, sagittis et ultrices id, tristique eu diam. Nulla quis leo ac lorem auctor placerat quis a ante. Sed mauris lorem, vestibulum ut laoreet viverra, ultricies sed dui. Donec convallis nulla nibh, eget hendrerit est luctus nec. Mauris sed turpis consectetur, varius lorem vel, lacinia erat. Donec in eleifend lectus, sed porta nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur aliquam nulla at dolor placerat gravida. Duis aliquam justo nec neque auctor, eu tincidunt justo vestibulum. Mauris dapibus massa ac malesuada vestibulum. Pellentesque eu quam est. Nunc lectus ante, accumsan non sagittis at, vulputate nec neque. Donec ullamcorper erat non consequat interdum.
+
+			Nunc luctus augue et erat vestibulum commodo. Proin cursus, lectus ut convallis lacinia, libero velit fringilla massa, eu rhoncus dui lacus id tellus. Aliquam posuere varius dapibus. Mauris congue semper dui ac mollis. Quisque accumsan aliquam augue, a ultrices odio euismod non. Duis vel justo mollis, volutpat dui fringilla, pretium metus. Donec dolor ante, congue id ullamcorper ac, maximus id justo. Mauris consequat facilisis sem in tincidunt. Maecenas vitae metus a magna congue mollis. Vivamus fringilla, metus et suscipit imperdiet, nulla dolor accumsan augue, id feugiat nisl quam ac lacus. Vestibulum lacinia ultricies fringilla. Integer est odio, imperdiet eget auctor vitae, consequat et ipsum. Praesent convallis dignissim varius. Morbi vel pulvinar arcu.
+
+			Maecenas imperdiet nibh eget arcu eleifend, sed feugiat magna vehicula. Vivamus auctor consectetur lectus eu porttitor. Proin ac maximus dui. Duis fringilla quam euismod, sodales tellus sit amet, vestibulum leo. Curabitur sed mauris nibh. Vivamus laoreet nulla dolor, at faucibus mi blandit eu. Vivamus gravida metus justo, sit amet viverra arcu ullamcorper vitae. Nulla vel risus vel lorem dictum venenatis ut vitae eros. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec suscipit felis varius, fermentum dui eget, interdum eros.
+
+			Suspendisse tristique arcu non egestas interdum. Aliquam vulputate efficitur tempus. Suspendisse neque mauris, vulputate non lacus sed, tristique lobortis risus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vivamus in mi placerat, vehicula dolor non, facilisis ligula. Maecenas at nisl nec arcu condimentum dictum. Nullam at ornare quam, a lobortis eros. Curabitur tincidunt, diam id ullamcorper interdum, lacus ipsum porttitor augue, condimentum ullamcorper est erat ut urna. Aenean lorem libero, pretium nec volutpat sed, faucibus sit amet arcu. Nam sit amet est sagittis eros blandit aliquet.
+
+- Unicode
+
+	- 200자 (400 byte)
+		
+			★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+	- 500자 (1000byte)
+			
+			안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요
