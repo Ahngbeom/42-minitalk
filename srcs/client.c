@@ -3,90 +3,88 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bahn <bahn@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/14 00:05:29 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/14 23:59:37 by bahn             ###   ########.fr       */
+/*   Created: 2021/07/15 17:45:23 by bahn              #+#    #+#             */
+/*   Updated: 2021/07/15 20:09:04 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-struct sigaction act;
+t_data g_client_data;
 
-void server_with_connection(int signo, siginfo_t *siginfo, void *context);
-void    send_message();
+void    ft_connection() {
+    kill(g_client_data.opponent_pid, SIGUSR1);
+    pause();
+}
 
-void server_with_connection(int signo, siginfo_t *siginfo, void *context)
-{
-    (void)context;
-    if (signo == SIGUSR1)
+void    ft_send_message() {
+    static  int i = 0;
+    static  int bit = 8;
+
+    while (g_client_data.msg[i] != '\0')
     {
-        ft_putstr_fd("Server with Connection : SUCCESS\n", 1);
-        ft_putstr_fd("Received SIGNAL from SERVER : ", 1);
-        ft_putnbr_fd(siginfo->si_signo, 1);
-        ft_putchar_fd('\n', 1);
-
-        act.sa_sigaction = send_message;
+        // ft_putstr_fd("SEND CHARACTER : ", 1);
+        while (--bit >= 0) {
+            // ft_putnbr_fd((g_client_data.msg[i] >> bit) & 1, 1);
+            if ((g_client_data.msg[i] >> bit) & 1)
+                kill(g_client_data.opponent_pid, SIGUSR1);
+            else
+                kill(g_client_data.opponent_pid, SIGUSR2);
+            usleep(1000);
+        }
+        bit = 8;
+        // ft_putchar_fd('(', 1);
+        // ft_putchar_fd(g_client_data.msg[i], 1);
+        // ft_putchar_fd(')', 1);
+        // ft_putchar_fd('\n', 1);
+        i++;
     }
-    else
+    if (g_client_data.msg[i] == '\0')
     {
+        while (bit-- > 0)
+        {
+            kill(g_client_data.opponent_pid, SIGUSR2);
+            usleep(1000);
+        }
+        exit(0);
+    }
+    // else {
+    //     while (--bit >= 0) {
+    //         ft_putnbr_fd(('\0' >> bit) & 1, 1);
+    //         if (('\0' >> bit) & 1)
+    //             kill(g_client_data.opponent_pid, SIGUSR1);
+    //         else
+    //             kill(g_client_data.opponent_pid, SIGUSR2);
+    //         usleep(1000);
+    //     }
+    //     bit = 8;
+    //     ft_putchar_fd('\n', 1);
+    //     i++;
+    // }
+}
+
+int     main(int argc, char **argv) {
+    if (argc != 3) {
         ft_putstr_fd("ERROR !\n", 1);
         exit(1);
     }
-}
 
-void    send_message()
-{
-    int     bit;
-    char    ch;
+    client_act.sa_sigaction = hdr_server_with_connection;
+    sigemptyset(& client_act.sa_mask);
+    client_act.sa_flags = SA_SIGINFO;
 
-    ft_putstr_fd("SEND MESSAGE : ", 1);
-    ft_putstr_fd("a", 1);
-    ft_putstr_fd(" (", 1);
-    bit = 8;
-    ch = 'a';
-	while (--bit >= 0)
-	{
-		// if ((ch >> bit) & 1)
-		// 	ft_putnbr_fd(1, 1);
-		// else
-		// 	ft_putnbr_fd(0, 1);
-		ft_putnbr_fd((ch >> bit) & 1, 1);
-		usleep(1000);
-	}
-    ft_putstr_fd(")\n", 1);
-}
-
-int main(int argc, char **argv)
-{
-    pid_t   server_pid;
-
-    if (argc != 3)
-    {
-        ft_putstr_fd("ERROR !\n", 1);
-        exit(1);
-    }
-
-    act.sa_sigaction = server_with_connection;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = SA_SIGINFO;
-    
-    sigaction(SIGUSR1, &act, NULL);
-    sigaction(SIGUSR2, &act, NULL);
+    sigaction(SIGUSR1, & client_act, NULL);
+    sigaction(SIGUSR2, & client_act, NULL);
 
     ft_putnbr_fd(getpid(), 1);
     ft_putchar_fd('\n', 1);
-    server_pid = ft_atoi(argv[1]);
-    
-    kill(server_pid, SIGUSR1);
-    usleep(1000);
-    send_message();
 
-    while (1)
-    {
-        pause();
-    }
+    g_client_data.opponent_pid = ft_atoi(argv[1]);
+    g_client_data.msg = argv[2];
+
+    ft_connection();
 
     return (0);
 }
