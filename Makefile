@@ -1,4 +1,4 @@
-NAME			= MINITALK
+NAME				= MINITALK
 BONUS				= MINITALK_BONUS
 
 SERVER 				= server
