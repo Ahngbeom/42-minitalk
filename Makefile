@@ -1,11 +1,19 @@
-NAME				= MINITALK
-BONUS				= MINITALK_BONUS
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/07/16 19:22:48 by bahn              #+#    #+#              #
+#    Updated: 2021/07/16 19:23:17 by bahn             ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+MINITALK			= MINITALK
 
 SERVER 				= server
-BONUS_SERVER 		= server
-
 CLIENT				= client
-BONUS_CLIENT		= client
 
 CC 					= gcc
 CFLAGS				= -Wall -Werror -Wextra
@@ -17,48 +25,48 @@ LIBFT_FILES 		= ft_putchar_fd.c ft_putstr_fd.c ft_putnbr_fd.c ft_atoi.c ft_strdu
 LIBFT_SRCS			= $(addprefix $(LIBFT_PATH), $(LIBFT_FILES))
 LIBFT_OBJS			= $(LIBFT_SRCS:.c=.o)
 
-SRCS_PATH			= ./srcs/
+SRCS_PATH			= ./srcs
 SERVER_FILES 		= server.c server_handler.c ft_charjoin.c
-SERVER_SRCS			= $(addprefix $(SRCS_PATH), $(SERVER_FILES))
-SERVER_OBJS			= $(SERVER_SRCS:.c=.o)
 CLIENT_FILES 		= client.c client_handler.c
-CLIENT_SRCS			= $(addprefix $(SRCS_PATH), $(CLIENT_FILES))
+SERVER_SRCS			= $(addprefix $(addsuffix /, $(SRCS_PATH)), $(SERVER_FILES))
+SERVER_SRCS_BONUS	= $(addprefix $(addsuffix _bonus/, $(SRCS_PATH)), $(patsubst %.c, %_bonus.c, $(SERVER_FILES)))
+CLIENT_SRCS			= $(addprefix $(addsuffix /, $(SRCS_PATH)), $(CLIENT_FILES))
+CLIENT_SRCS_BONUS	= $(addprefix $(addsuffix _bonus/, $(SRCS_PATH)), $(patsubst %.c, %_bonus.c, $(CLIENT_FILES)))
+SERVER_OBJS			= $(SERVER_SRCS:.c=.o)
+SERVER_OBJS_BONUS	= $(SERVER_SRCS_BONUS:.c=.o)
 CLIENT_OBJS			= $(CLIENT_SRCS:.c=.o)
+CLIENT_OBJS_BONUS	= $(CLIENT_SRCS_BONUS:.c=.o)
 
-BONUS_SRCS_PATH		= ./srcs_bonus/
-BONUS_SERVER_FILES	= server_bonus.c server_handler_bonus.c ft_charjoin_bonus.c
-BONUS_SERVER_SRCS	= $(addprefix $(BONUS_SRCS_PATH), $(BONUS_SERVER_FILES))
-BONUS_SERVER_OBJS	= $(BONUS_SERVER_SRCS:.c=.o)
-BONUS_CLIENT_FILES	= client_bonus.c client_handler_bonus.c
-BONUS_CLIENT_SRCS	= $(addprefix $(BONUS_SRCS_PATH), $(BONUS_CLIENT_FILES))
-BONUS_CLIENT_OBJS	= $(BONUS_CLIENT_SRCS:.c=.o)
+ifdef BONUS
+	SERVER_OBJECTS 	= $(SERVER_OBJS_BONUS)
+	CLIENT_OBJECTS 	= $(CLIENT_OBJS_BONUS)
+else
+	SERVER_OBJECTS	= $(SERVER_OBJS)
+	CLIENT_OBJECTS	= $(CLIENT_OBJS)
+endif
 
-%.o: %.c
+all: $(MINITALK)
+
+.c.o:
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
 
-$(SERVER)	: $(LIBFT_OBJS) $(SERVER_OBJS)
-	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $^
-$(BONUS_SERVER)	: $(LIBFT_OBJS) $(BONUS_SERVER_OBJS)
-	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $^
+$(SERVER): $(LIBFT_OBJS) $(SERVER_OBJECTS)
+	$(CC) $(CFLAGS) $(INCFLAGS) $^ -o $@
 
-$(CLIENT)	: $(LIBFT_OBJS) $(CLIENT_OBJS)
-	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $^
-$(BONUS_CLIENT)	: $(LIBFT_OBJS) $(BONUS_CLIENT_OBJS)
-	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $^
+$(CLIENT): $(LIBFT_OBJS) $(CLIENT_OBJECTS)
+	$(CC) $(CFLAGS) $(INCFLAGS) $^ -o $@
 
-$(NAME) 	: $(SERVER) $(CLIENT)
-$(BONUS)		: $(BONUS_SERVER) $(BONUS_CLIENT)
+$(MINITALK): $(SERVER) $(CLIENT)
 
-all : $(NAME)
+bonus:
+	$(MAKE) BONUS=1 all
 
-bonus : $(BONUS)
+re: fclean all
 
-re			: fclean all
+clean:
+	$(RM) $(LIBFT_OBJS) $(SERVER_OBJS) $(SERVER_OBJS_BONUS) $(CLIENT_OBJS) $(CLIENT_OBJS_BONUS)
 
-clean		:
-		$(RM) $(LIBFT_OBJS) $(SERVER_OBJS) $(CLIENT_OBJS) $(BONUS_SERVER_OBJS) $(BONUS_CLIENT_OBJS)
+fclean: clean
+	$(RM) $(SERVER) $(CLIENT)
 
-fclean		: clean
-		$(RM) $(SERVER) $(CLIENT) $(BONUS_SERVER) $(BONUS_CLIENT)
-
-.PHONY		: all re clean fclean
+.PHONY: all re clean fclean
