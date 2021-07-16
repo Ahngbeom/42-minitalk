@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 17:45:23 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/15 21:40:35 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/16 23:02:56 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ int     main(int argc, char **argv) {
     }
 
     client_act.sa_sigaction = hdr_server_with_connection;
-    sigemptyset(& client_act.sa_mask);
+    sigemptyset(&client_act.sa_mask);
     client_act.sa_flags = SA_SIGINFO;
 
-    sigaction(SIGUSR1, & client_act, NULL);
-    sigaction(SIGUSR2, & client_act, NULL);
+    sigaction(SIGUSR1, &client_act, NULL);
+    sigaction(SIGUSR2, &client_act, NULL);
 
     ft_putnbr_fd(getpid(), 1);
     ft_putchar_fd('\n', 1);
