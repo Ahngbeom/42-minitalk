@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 23:06:11 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/15 23:27:44 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/17 22:24:03 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,9 @@ void    hdr_send_message(int signo, siginfo_t *siginfo, void *context);
 // Client Function
 void    ft_server_with_connection(pid_t pid);
 void    ft_send_message();
+
+// Exception Handler
+void    exception_message(char *exception);
+int    exception_kill(int rtn);
 
 #endif
