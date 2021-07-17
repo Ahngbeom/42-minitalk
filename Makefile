@@ -6,7 +6,7 @@
 #    By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/16 19:22:48 by bahn              #+#    #+#              #
-#    Updated: 2021/07/16 19:23:17 by bahn             ###   ########.fr        #
+#    Updated: 2021/07/17 22:27:30 by bahn             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,10 +28,11 @@ LIBFT_OBJS			= $(LIBFT_SRCS:.c=.o)
 SRCS_PATH			= ./srcs
 SERVER_FILES 		= server.c server_handler.c ft_charjoin.c
 CLIENT_FILES 		= client.c client_handler.c
-SERVER_SRCS			= $(addprefix $(addsuffix /, $(SRCS_PATH)), $(SERVER_FILES))
-SERVER_SRCS_BONUS	= $(addprefix $(addsuffix _bonus/, $(SRCS_PATH)), $(patsubst %.c, %_bonus.c, $(SERVER_FILES)))
-CLIENT_SRCS			= $(addprefix $(addsuffix /, $(SRCS_PATH)), $(CLIENT_FILES))
-CLIENT_SRCS_BONUS	= $(addprefix $(addsuffix _bonus/, $(SRCS_PATH)), $(patsubst %.c, %_bonus.c, $(CLIENT_FILES)))
+EXCEPTION_FILES		= exception_handler.c
+SERVER_SRCS			= $(addprefix $(addsuffix /, $(SRCS_PATH)), $(SERVER_FILES) $(EXCEPTION_FILES))
+SERVER_SRCS_BONUS	= $(addprefix $(addsuffix _bonus/, $(SRCS_PATH)), $(patsubst %.c, %_bonus.c, $(SERVER_FILES) $(EXCEPTION_FILES)))
+CLIENT_SRCS			= $(addprefix $(addsuffix /, $(SRCS_PATH)), $(CLIENT_FILES) $(EXCEPTION_FILES))
+CLIENT_SRCS_BONUS	= $(addprefix $(addsuffix _bonus/, $(SRCS_PATH)), $(patsubst %.c, %_bonus.c, $(CLIENT_FILES) $(EXCEPTION_FILES)))
 SERVER_OBJS			= $(SERVER_SRCS:.c=.o)
 SERVER_OBJS_BONUS	= $(SERVER_SRCS_BONUS:.c=.o)
 CLIENT_OBJS			= $(CLIENT_SRCS:.c=.o)
