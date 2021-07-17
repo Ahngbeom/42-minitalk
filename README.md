@@ -8,7 +8,7 @@
 2.	`bash ./server`
 
 3.	`bash ./client [SERVER PID] [SEND MESSAGE]`
-
+---
 ## <span style="color:#FA5882"/>과제 요구 조건
 
 -	클라이언트가 실행될 때에 PID를 표시해야 한다.
@@ -29,7 +29,23 @@
 
 	-	유니코드 문자도 지원하도록 해보세요.<br>
 		🖤∑∞☞★⚝✅🔥⌚☣☮🌏📱Ⅻ🚀€🍔🍦👑⚽🎵🎧♻
+---
+# sigaction
 
+- SA_SIGINFO
+
+	sa_flags에 SA_SIGINFO 플래그를 지정하면 시그널이 발생할 원인을 알 수 있다.
+	sigaction 구조체에서 시그널 핸들러를 지정할 때 sa_handler 대신 sa_sigaction을 사용한다.
+	시그널 핸들러는 다음과 같이 인자 3개를 받는 형태로 정의되어진다.
+
+	```c
+	void handler(int signo, siginfo_t *siginfo, ucontext_t *context);
+
+	// signo : 시그널 핸들러를 호출할 시그널
+	// siginfo : 시그널이 발생한 원인을 담은 siginfo_t 구조체 포인터
+	// context : 시그널이 전달될 때 시그널을 받는 프로세스의 내부 상태를 담은 ucontext_t 구조체 포인터
+	```
+---
 
 ## <span style="color:#9F81F7"/>동작흐름
 
@@ -74,7 +90,7 @@
 <br>
 
 -	<span style="color:#F3F781"/>
-	sigaction 구조체에는 핸들러를 지정할 수 있는 2개의 함수 포인터가 존재한다.<br>
+	서버는 수신한 시그널에 대해 처리할 함수(핸들러)를 지정해주어야 한다.<br>sigaction 구조체에는 핸들러를 지정할 수 있는 2개의 함수 포인터가 존재한다.
 	
 	```c
 	void (*sa_handler)(int);
@@ -139,68 +155,180 @@
 
 -	<span style="color:#F3F781"/>
 	서버와 연결하기 위한 모든 준비 과정을 마쳤다면,<br>
-	서버와 연결하기 위해 ft_connection() 함수를 호출한다.
+	서버와 연결하기 위해 ft_connection() 함수를 호출한다.<br>
+	ft_connection() 함수에서는 kill() 함수를 통해 서버에게 시그널을 전송한다. <br>kill 함수의 첫번째 매개변수로 시그널을 전송할 대상의 PID를 기입하고, 두번째 매개변수로 시그널 종류를 기입한다. <br>따라서 <span style="color:red; font-weight: bold;">서버의 PID</span>와 <span style="color:red; font-weight: bold;">SIGUSR1 시그널</span>을 전송한다.
+	시그널을 보낸 후 서버의 응답 신호를 기다리기 위해 pause() 함수를 호출한다.
+
+		pause() 함수는 시그널을 수신할 때까지 대기 상태로 전환된다.
 <br>
 
-### 3. 클라이언트 PID 수신
-	-	서버는 클라이언트의 PID를 저장할 변수를 선언한다.
+### 3. 서버 - 클라이언트 PID 수신
+-	<span style="color:#F3F781"/>
+	서버는 시그널이 수신되면 hdr_client_with_connection 함수가 호출된다.<br>hdr_client_with_connection() 핸들러 함수의 2번째 매개변수인
+	siginfo_t 타입 siginfo 구조체 si_pid 값을 통해<br>
+	<span style="color:red; font-weight: bold;">클라이언트의 PID를 얻어낸다.</span><br>
+	서버 또한 g_server_data 전역 구조체를 선언하여 클라이언트 PID를 저장할 변수와 <br>
+	클라이언트가 보낸 메시지를 저장할 변수를 초기화해준다.
+<br>
 
-	-	서버는 클라이언트가 보내는 신호에 따라 비트 값을 연산하여  
-		클라이언트의 PID 값을 알아낸다.
+-	<span style="color:#F3F781"/>
+	클라이언트가 보내는 신호를 통해 클라이언트가 보내고자하는 메시지를 해독하기위해 <br><span style="color:red; font-weight: bold;">sigaction 핸들러를 다시 설정해주어야한다.</span><br>
+	시그널 핸들러를 hdr_receive_message() 함수로 변경을 해준 후,
+	sigaction() 함수를 호출하여 시그널에 대한 처리를 재설정해준다.
+<br>
 
-			클라이언트에서 보내온 신호가 SIGUSR1 이라면 비트 값은 1.
-			SIGUSR2 라면 비트 값은 0인 것으로 약속한다.
-			2^0 자리부터 2^7 자리까지 신호에 따른 비트 값을 연산하여
-			클라이언트의 PID 값을 알아내는 방식으로 설계해보았다.
+-	<span style="color:#F3F781"/>
+	이제 클라이언트에게 응답 시그널을 전송하여 메시지를 받을 준비가 되었다는 것을 알린다.<br>
+	kill 함수를 통해 클라이언트의 PID가 저장되어있는 siginfo->si_pid 와 <br>클라이언트가 보낸 시그널이 저장되어있는 siginfo->si_signo 시그널을 그대로 보내준다.
+<br>
 
-2. ### 서버에게 메시지 전달 
+### 4. 클라이언트 - 서버에게 메시지 전달 
 
-	-	<span style="color:#F3F781"/>
-	PID를 전달하는 과정은 서버에게 응답을 받지 않는 대신  
-	usleep 함수를 통해 전송 딜레이를 발생시킨다.
+-	<span style="color:#F3F781"/>
+	서버로부터 응답 시그널이 발생했을 때 클라이언트는 hdr_server_with_connection() 핸들러 함수를 호출하게된다.<br>
+	hdr_server_with_connection() 핸들러는 서버에게 보낸 SIGUSR1 시그널을 서버가 그대로 응답했다면<br> 서버와의 연결이 성공했다는 의미로 받아들이게된다.<br>
+	클라이언트도 마찬가지로 메세지를 보낸 후 메시지 수신완료에 대한 응답시그널을 받기 위해 sigaction 핸들러 함수를 ft_send_message() 함수로 변경 및 적용시켜준다.
+<br>
+
+-	<span style="color:#F3F781"/>
+	서버에게 보낼 문자열로된 메시지를 비트 단위로 보내기위해 <span style="color:red; font-weight: bold;">ft_send_message()</span> 함수를 호출한다.
+<br>
+
+-	<span style="color:#F3F781"/>
+	지금부터 본격적으로 서버에게 메시지를 보내는 작업을 수행한다.<br>
+	g_client_data.msg에 저장되어있는 클라이언트가 보낼 메시지를 문자 수 만큼 반복 수행하고<br>
+	다시 문자를 2진수 비트 단위로 쪼개어 최상위 비트부터 비트 값에 맞추어<br>
+	<span style="color:red; font-weight: bold;">
+	비트 값이 1일 경우 SIGUSR1 <br>
+	비트 값이 0일 경우 SIGUSR2 
+	</span><br>
+	신호를 보낸다.
+
+	<mark style='background-color: #F781F3'>단, 주의할 점은 kill() 함수를 통해 서버에게 일방적으로 반복적인 신호를 전송할 것이기 때문에 약간의 딜레이가 필요하다.</mark>
 
 		클라이언트가 서버에게 kill 함수를 통해 보내는 신호의 속도보다 
-		서버에서 signal 함수로 받는 속도가 느리기 때문에 적절한 딜레이가 필요하다. 
+ 		서버에서 signal 함수로 받는 속도가 느리기 때문에 적절한 딜레이가 필요하다.
+	
+	과제 요구 조건으로 100개의 문자를 보낼 때 1초 이상 소요된다면 그것은 어마어마하게 긴 시간이 소요된 것이라고 한다.
 
-	-	서버에게 정상적으로 PID를 전송하여 서버에서 PID 값을 정상적으로 저장을 했다면 
-		같은 방식으로 Server에게 보낼 메시지의 각 문자 비트 값에 대한 신호를  
-		반복적으로 보내어 서버가 메시지의 내용을 수신 및 해독할 수 있도록 한다.   
+	딜레이를 주기위해 사용할 수 있는 함수는 다음 2가지 함수이다.
+	```C
+	unsigned int sleep (unsigned int __seconds);
+	```
+	```C
+	int usleep (__useconds_t __useconds);
+	```
+	두 함수의 차이점은 sleep() 함수는 초 단위로 매개변수를 받아 해당 초 만큼 대기 상태가 된다.<br>usleep() 함수는 마이크로 초 단위로 매개변수를 받아 해당 마이크로 초 만큼 대기 상태가 된다.<br>
 
-	-	클라이언트는 메시지의 각 문자의 비트 값을 보내고 pause() 함수를 통해 
-		서버에서 신호가 올 때까지 대기한다.
+		1000000 µs(micro seconds) == 1.0 s (seconds)
+		10000 µs(micro seconds) == 0.01 s (seconds)
 
-	-	서버는 클라이언트가 보내는 각 문자의 비트 값을 정상적으로 수신하고 처리를 할 때마다   
-		클라이언트에게 SIGUSR2 신호를 보낸다.
+	<span style="color:#B18904"/>
+	1개의 문자를 전송할 때 8개의 비트를 보내야한다.
+	즉, 8번의 kill() 함수를 사용하여 시그널을 전송시켜야한다.
+	따라서 8번의 딜레이가 비례적으로 필요하다.
+	만약 최소한 1초에 100개의 문자를 보내야한다면
+	각 비트를 전송할 때마다 1250 µs 만큼의 딜레이를 준다고 가정하면
 
-	-	클라이언트는 signal 함수를 통해 서버에서 보낸 SIGUSR2 신호를 수신하기 위해
-		SIGUSR2 신호에 대한 핸들러 함수를 만들어 이에 대한 처리 과정을 할 수 있도록 한다.
+		100(character) * (1250 µs * 8(bit)) = 1000000 µs(1 s)
 
-			server_signal 이라는 전역 변수를 선언하여
-			SIGUSR2 신호의 핸들러 함수에서 server_signal 변수 값을 조작하며
-			다음 동작을 이어서 수행할 수 있도록 한다.
+	100개의 모든 문자를 전송할 때까지 1초가 걸리는 셈이다.<br>
+	usleep 함수를 통해 1250 µs 만큼 대기하도록 테스트해보니 <br>
+	체감상 1초는 오래걸리는 것 같기는하다.
 
-![image](https://user-images.githubusercontent.com/57256332/125564893-334c265e-b30b-4b9c-9b33-2418fef16f80.png)
+	그래서 100개의 문자를 전송할 때 0.1초 정도 걸리도록
+	usleep 함수를 통해 125 µs 만큼만 대기하도록 수정해보니
+	훨씬 시원하게 메시지가 출력된다.
+	</span>
+<br>
+	
+-	<span style="color:#F3F781"/>
+	usleep() 함수와 함께 메세지의 구성 문자들을 모두 서버에게 전송완료했다면,<br>
+	마지막으로 '\0' 널 종료문자에 대한 시그널도 서버에게 보낸다.<br>
+	'\0'의 2진수는 00000000이기 때문에 SIGUSR2 시그널을 8번 반복하여 전송한다.
+<br>
 
-# sigaction
+-	<span style="color:#F3F781"/>
+	메시지가 모두 성공적으로 수신 완료되었다는 시그널을 서버로부터 받기 위해<br>
+	pause() 함수를 호출하여 대기한다.
+<br>
 
-- SA_SIGINFO
+### 5. 서버 - 클라이언트 메세지 수신
+-	<span style="color:#F3F781"/>
+	서버는 클라이언트가 메세지에 대한 시그널을 보낼 때마다 hdr_receive_message() 함수가 호출된다.<br>
+	클라이언트가 일방적이고 반복적으로 보내는 시그널을 해독하기 위해서<br>
+	정적 변수를 통해 bit 수를 카운트하여 클라이언트가 보내고자하는 문자 값이 무엇인지를 알아낸다.
 
-	sa_flags에 SA_SIGINFO 플래그를 지정하면 시그널이 발생할 원인을 알 수 있다.
-	sigaction 구조체에서 시그널 핸들러를 지정할 때 sa_handler 대신 sa_sigaction을 사용한다.
-	시그널 핸들러는 다음과 같이 인자 3개를 받는 형태로 정의되어진다.
+		핸들러 함수는 시그널이 발생할 때마다 호출되어진다.
+		그말은 즉슨, 정적 변수를 사용하지않는다면 시그널이 발생할 때마다 핸들러 함수안의 변수들의 값은 유지되지않고 초기화된다.
+	
+	또한 8bit 만큼의 시그널을 받았다면 해당 문자 값을 저장하기위한 변수도 정적으로 선언한다.<br>
+
+	클라이언트로부터 보내온 시그널이 SIGUSR1 이라면<br>
+	ch 정적 변수에 bit 변수 값에 해당하는 비트 자리에 1을 추가한 후 비트 값을 1 감소시킨다.<br>
+
+	반대로 클라이언트로부터 보내온 시그널이 SIGUSR2 이라면<br>
+	bit 변수 값을 1 감소시키는 작업만 수행한다.<br>
 
 	```c
-	void handler(int signo, siginfo_t *siginfo, ucontext_t *context);
-
-	// signo : 시그널 핸들러를 호출할 시그널
-	// siginfo : 시그널이 발생한 원인을 담은 siginfo_t 구조체 포인터
-	// context : 시그널이 전달될 때 시그널을 받는 프로세스의 내부 상태를 담은 ucontext_t 구조체 포인터
+	if (signo == SIGUSR1)
+        ch += 1 << --bit;
+    else if (signo == SIGUSR2)
+        --bit;
 	```
-# Text for TEST
+
+	8번의 시그널을 받은 후 bit 변수의 값이 0이 되었다면,<br>
+	ch 문자 값을 g_server_data.msg 값과 병합한다.
+	
+	bit 변수와 ch 변수는 각각 8과 '\0'으로 다시 초기화해준다.
+
+	```c
+	if (bit == 0)
+    {
+        if (ch != '\0')
+            g_server_data.msg = ft_charjoin(g_server_data.msg, ch);
+        .
+		.
+		.
+        bit = 8;
+        ch = '\0';
+    }
+	```
+
+	만약 8번의 시그널을 수신받아 bit 변수의 값이 0이 되었고, ch 값이 '\0'이라면
+	<br>
+	클라이언트가 보내고자하는 메세지는 모두 전송되었다는 의미로 받아들여<br>
+	클라이언트와 통신 작업의 마지막 단계를 수행한다.
+<br>
+
+### 6. 통신 및 연결 종료
+-	<span style="color:#F3F781"/>
+	서버는 '\0' 널 종료 문자에 대한 시그널을 수신받으면<br>
+	지금까지 수신받은 문자들을 조합하여 저장해놓은 g_server_data.msg 를 출력해준 후,<br>할당되었던 메모리 공간을 해제시켜준다.<br>
+
+	sigaction 핸들러 함수도 다시 hdr_client_with_connection() 함수로 변경 및 적용하여	초기설정으로 되돌린다.<br>
+
+	클라이언트에게 SIGUSR2 시그널을 전송하여 모든 메세지를 성공적으로 수신받았고,<br>정상적으로 출력되었다는 의미의 마지막 인사를 건넨다.
+<br>
+
+-	<span style="color:#F3F781"/>
+	클라이언트는 서버로부터 수신받은 시그널이 SIGUSR2 인 것을 확인한 후,
+	클라이언트 프로그램을 정상 종료한다.
+<br>
+
+### Bonus
+-	<span style="color:#A9D0F5"/>
+	유니코드는 어떤 방식으로 출력되는 것일까?
+<br>
+
+
+---
+
+# Text for TEST 
 
 - Ascii
 
-	- 100자 (100 byte)
+	* 100자 (100 byte)
 
 			LoremipsumdolorsitametLoremipsumdolorsitametLoremipsumdolorsitametLoremipsumdolorsitametLoremipsumdo
 
@@ -217,6 +345,10 @@
 			Suspendisse tristique arcu non egestas interdum. Aliquam vulputate efficitur tempus. Suspendisse neque mauris, vulputate non lacus sed, tristique lobortis risus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vivamus in mi placerat, vehicula dolor non, facilisis ligula. Maecenas at nisl nec arcu condimentum dictum. Nullam at ornare quam, a lobortis eros. Curabitur tincidunt, diam id ullamcorper interdum, lacus ipsum porttitor augue, condimentum ullamcorper est erat ut urna. Aenean lorem libero, pretium nec volutpat sed, faucibus sit amet arcu. Nam sit amet est sagittis eros blandit aliquet.
 
 - Unicode
+
+	- Emoji
+
+			🖤∑∞☞★⚝✅🔥⌚☣☮🌏📱Ⅻ🚀€🍔🍦👑⚽🎵🎧♻
 
 	- 200자 (400 byte)
 		
