@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 17:45:23 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/15 23:28:02 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/17 22:28:45 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,25 +49,17 @@ void    ft_send_message() {
 }
 
 int     main(int argc, char **argv) {
-    if (argc != 3) {
-        ft_putstr_fd("ERROR !\n", 1);
-        exit(1);
-    }
-
+    if (argc != 3)
+        exception_message("./client [SERVER PID] [SEND MESSAGE]");
     client_act.sa_sigaction = hdr_server_with_connection;
     sigemptyset(& client_act.sa_mask);
     client_act.sa_flags = SA_SIGINFO;
-
     sigaction(SIGUSR1, & client_act, NULL);
     sigaction(SIGUSR2, & client_act, NULL);
-
     ft_putnbr_fd(getpid(), 1);
     ft_putchar_fd('\n', 1);
-
     g_client_data.opponent_pid = ft_atoi(argv[1]);
     g_client_data.msg = argv[2];
-
     ft_connection();
-
     return (0);
 }
