@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 17:45:23 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/17 22:28:45 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/18 15:37:32 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_data g_client_data;
 
 void    ft_connection() {
-    kill(g_client_data.opponent_pid, SIGUSR1);
+    exception_kill(kill(g_client_data.opponent_pid, SIGUSR1));
     pause();
 }
 
@@ -25,14 +25,12 @@ void    ft_send_message() {
 
     while (g_client_data.msg[i] != '\0')
     {
-        // ft_putstr_fd("SEND CHARACTER : ", 1);
         while (--bit >= 0) {
-            // ft_putnbr_fd((g_client_data.msg[i] >> bit) & 1, 1);
             if ((g_client_data.msg[i] >> bit) & 1)
-                kill(g_client_data.opponent_pid, SIGUSR1);
+                exception_kill(kill(g_client_data.opponent_pid, SIGUSR1));
             else
-                kill(g_client_data.opponent_pid, SIGUSR2);
-            usleep(1000);
+                exception_kill(kill(g_client_data.opponent_pid, SIGUSR2));
+            usleep(125);
         }
         bit = 8;
         i++;
@@ -41,19 +39,19 @@ void    ft_send_message() {
     {
         while (bit-- > 0)
         {
-            kill(g_client_data.opponent_pid, SIGUSR2);
-            usleep(1000);
+            exception_kill(kill(g_client_data.opponent_pid, SIGUSR2));
+            usleep(125);
         }
-        exit(0);
+        pause();
     }
 }
 
 int     main(int argc, char **argv) {
     if (argc != 3)
         exception_message("./client [SERVER PID] [SEND MESSAGE]");
+    client_act.sa_flags = SA_SIGINFO;
     client_act.sa_sigaction = hdr_server_with_connection;
     sigemptyset(& client_act.sa_mask);
-    client_act.sa_flags = SA_SIGINFO;
     sigaction(SIGUSR1, & client_act, NULL);
     sigaction(SIGUSR2, & client_act, NULL);
     ft_putnbr_fd(getpid(), 1);

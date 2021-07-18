@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/14 22:18:49 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/17 20:46:18 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/18 15:38:25 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void hdr_client_with_connection(int signo, siginfo_t *siginfo, void *context)
     (void)context;
     if (signo == SIGUSR1)
     {
-        ft_putstr_fd("Client-", 1);
+        ft_putstr_fd("Client(", 1);
         ft_putnbr_fd(siginfo->si_pid, 1);
-        ft_putstr_fd(" with Connection : SUCCESS\n", 1);
+        ft_putstr_fd(") with Connection : SUCCESS\n", 1);
         g_server_data.opponent_pid = siginfo->si_pid;
         g_server_data.msg = ft_strdup("");
         server_act.sa_sigaction = hdr_receive_message;
