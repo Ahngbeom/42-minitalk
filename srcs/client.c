@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 17:45:23 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/18 15:37:21 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/18 16:42:02 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,17 @@
 
 t_data g_client_data;
 
-void    ft_connection() {
+void    ft_connection()
+{
     exception_kill(kill(g_client_data.opponent_pid, SIGUSR1));
     pause();
 }
 
-void    ft_send_message() {
+void    ft_send_message()
+{
     static  int i = 0;
     static  int bit = 8;
+    static  int kill_count = 0;
 
     while (g_client_data.msg[i] != '\0')
     {
@@ -31,6 +34,7 @@ void    ft_send_message() {
             else
                 exception_kill(kill(g_client_data.opponent_pid, SIGUSR2));
             usleep(125);
+            kill_count++;
         }
         bit = 8;
         i++;
