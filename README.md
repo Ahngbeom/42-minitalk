@@ -318,7 +318,72 @@
 
 ### Bonus
 -	<span style="color:#A9D0F5"/>
-	유니코드는 어떤 방식으로 출력되는 것일까?
+	유니코드는 어떤 방식으로 출력되는 것일까?<br><br>
+
+	클라이언트가 서버에게 유니코드 문자 1개만을 전송한다면<br>
+	클라이언트의 시그널 전송 동작은 어떻게 이루어질까?
+
+	기존 클라이언트 파일 코드에서 일부 코드를 추가하여 kill 함수를 몇 번이나 호출하는지 확인해보자.
+	```c++
+	void    ft_send_message()
+    {
+		static  int i = 0;
+		static  int bit = 8;
+		static  int kill_count = 0;
+
+		while (g_client_data.msg[i] != '\0')
+		{
+			while (--bit >= 0) {
+				if ((g_client_data.msg[i] >> bit) & 1)
+					exception_kill(kill(g_client_data.opponent_pid, SIGUSR1));
+				else
+					exception_kill(kill(g_client_data.opponent_pid, SIGUSR2));
+				usleep(125);
+				kill_count++;
+			}
+			bit = 8;
+			i++;
+		}
+		ft_putnbr_fd(kill_count, 1);
+		ft_putchar_fd('\n', 1);
+		if (g_client_data.msg[i] == '\0')
+		{
+			while (bit-- > 0)
+			{
+				exception_kill(kill(g_client_data.opponent_pid, SIGUSR2));
+				usleep(125);
+			}
+			pause();
+		}
+	}
+	```
+
+	아래 스크린샷처럼 32번의 kill 함수를 사용했다는 결과가 출력되었다.
+	
+	![image](https://user-images.githubusercontent.com/57256332/126058759-9342b1c9-c1ea-4349-a87e-a3f54d445ef9.png)
+
+	ASCII 코드 경우에는 "a" 라는 메시지를 보낸다고 가정하였을 때는
+	kill() 함수를 8번만 호출하여 시그널을 전송할 것이다.
+
+	![image](https://user-images.githubusercontent.com/57256332/126059023-25e29499-e8a9-47a9-9ae4-00d0a4f78009.png)
+	
+	즉, 유니코드 문자는 문자 당 8Bit(1Byte) * 4 만큼 시그널이 전송되어져야 한다는 것을 알 수 있다.
+
+	유니코드를 표현하기 위해 가변 길이 문자 인코딩 방식인 UTF-8 사용한다.<br>
+	UTF-8 은 최소 1byte ~ 4byte 까지를 가변적으로 사용하게 되는 데 <br>이때 각 표현이 가능한 문자열의 크기에 따라 정해 지게 된다.<br>
+
+	![image](https://user-images.githubusercontent.com/57256332/126059490-870e8740-6fa0-4c41-aabd-0e84c73e7fa1.png)
+
+	| 👑 | 코드 |
+	| --- | --- |
+	| 유니코드 (16진수) | U+`1F451` |
+	| HTML코드 (10진수) | &#`128081`; |
+	
+	따라서,👑 이모지의 유니코드 값이 `U+1F451` 이기 때문에 <br>출력하기위해서는 4Byte 만큼의 공간이 필요한 것이다.
+
+	그렇기 때문에 32bit 크기 만큼의 문자를 서버로 보내기위해서는 32번의 시그널 전송이 이루어져야한다.
+
+	[참고 - JaeSeoKim's Blog](https://jaeseokim.dev/C/C-%EC%9C%A0%EB%8B%88%EC%BD%94%EB%93%9C(unicode)%EC%97%90_%EB%8C%80%ED%95%B4_%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0(feat.42seoul_ft_printf)/)
 <br>
 
 ---
