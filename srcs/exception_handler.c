@@ -12,21 +12,24 @@
 
 #include "minitalk.h"
 
-void    exception_message(char *exception)
+void	exception_message(char *exception)
 {
-    ft_putstr_fd("ERROR : ", 1);
-    ft_putstr_fd(exception, 1);
-    ft_putchar_fd('\n', 1);
-    exit(1);
+	ft_putstr_fd("ERROR : ", 1);
+	ft_putstr_fd(exception, 1);
+	ft_putchar_fd('\n', 1);
+	exit(1);
 }
 
-int     exception_kill(int rtn)
+int	exception_kill(int rtn)
 {
-    if (rtn == 0)
-        return (0);
-    else
-    {
-        exception_message("INVALID PID or KILL ERROR");
-        exit(1);
-    }
+	if (rtn == 0)
+	{
+		usleep(125);
+		return (0);
+	}
+	else
+	{
+		exception_message("INVALID PID or KILL ERROR");
+		exit(1);
+	}
 }

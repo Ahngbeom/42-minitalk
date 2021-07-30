@@ -50,7 +50,7 @@ static	void	ft_putnbr(char *ptr, long long nb, size_t len)
 	*ptr = '\0';
 }
 
-char			*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	char		*nbr;
 	size_t		len;
@@ -60,14 +60,16 @@ char			*ft_itoa(int n)
 	len = ft_nbrlen(num);
 	if (n < 0)
 	{
-		if (!(nbr = (char *)malloc(sizeof(char) * (len + 2))))
+		nbr = (char *)malloc(sizeof(char) * (len + 2));
+		if (nbr == NULL)
 			return (NULL);
 		*nbr = '-';
 		ft_putnbr(nbr + sizeof(char), num * -1, len);
 	}
 	else
 	{
-		if (!(nbr = (char *)malloc(sizeof(char) * (len + 1))))
+		nbr = (char *)malloc(sizeof(char) * (len + 1));
+		if (nbr == NULL)
 			return (NULL);
 		ft_putnbr(nbr, num, len);
 	}

@@ -12,20 +12,33 @@
 
 #include "libft.h"
 
+static	int	ft_sp_check(char ch)
+{
+	if (ch != '\0')
+	{
+		if (ch == ' ' || ch == '\f' || \
+				ch == '\n' || ch == '\r' || ch == '\t' || ch == '\v')
+		{
+			return (1);
+		}
+	}
+	else
+		return (0);
+}
+
 static	char	*ft_isspace(char *str)
 {
-	while (*str != '\0' && (*str == ' ' || *str == '\f' || *str == '\n' ||
-	*str == '\r' || *str == '\t' || *str == '\v'))
+	while (ft_sp_check(*str))
 	{
 		str++;
 	}
 	return (str);
 }
 
-int				ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
-	long long sign;
-	long long nbr;
+	long long	sign;
+	long long	nbr;
 
 	sign = 1;
 	nbr = 0;

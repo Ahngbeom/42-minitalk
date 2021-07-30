@@ -72,7 +72,7 @@ static	size_t	ft_strclen(char *s, char c)
 	return (length);
 }
 
-char			**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
 	char	**result;
 	char	*sptr;
@@ -83,19 +83,19 @@ char			**ft_split(char const *s, char c)
 		return (NULL);
 	sptr = (char *)s;
 	cnt_strs = ft_countstrs(sptr, c);
-	if (!(result = (char **)malloc(sizeof(char *) * (cnt_strs + 1))))
+	result = (char **)malloc(sizeof(char *) * (cnt_strs + 1));
+	if (result == NULL)
 		return (NULL);
-	i = 0;
-	while (i < cnt_strs)
+	i = -1;
+	while (++i < cnt_strs)
 	{
-		if (!(result[i] =
-(char *)malloc(ft_strclen(ft_findstr(sptr, c), c) + 1)))
+		result[i] = (char *)malloc(ft_strclen(ft_findstr(sptr, c), c) + 1);
+		if (result[i] == NULL)
 			return (ft_free_malloc(result));
-		ft_strlcpy(result[i], ft_findstr(sptr, c),
-ft_strclen(ft_findstr(sptr, c), c) + 1);
-		sptr = ft_findstr(ft_findstr(sptr, c) +
-ft_strclen(ft_findstr(sptr, c), c), c);
-		i++;
+		ft_strlcpy(result[i], ft_findstr(sptr, c), \
+				ft_strclen(ft_findstr(sptr, c), c) + 1);
+		sptr = ft_findstr(ft_findstr(sptr, c) + \
+				ft_strclen(ft_findstr(sptr, c), c), c);
 	}
 	result[i] = NULL;
 	return (result);

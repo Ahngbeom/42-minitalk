@@ -12,7 +12,7 @@
 
 char	*ft_strrchr(char *str, int c)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (*str != '\0')

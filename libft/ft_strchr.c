@@ -12,7 +12,7 @@
 
 char	*ft_strchr(char *str, int c)
 {
-	char *ptr;
+	char	*ptr;
 
 	ptr = str;
 	while (*ptr != '\0')
