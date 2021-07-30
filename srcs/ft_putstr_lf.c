@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   ft_putstr_lf.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/15 22:42:29 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/30 21:19:06 by bahn             ###   ########.fr       */
+/*   Created: 2020/12/30 14:23:07 by bahn              #+#    #+#             */
+/*   Updated: 2021/07/30 21:12:55 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int	main(int argc, char **argv)
+void	ft_putstr_lf(char *str)
 {
-	(void)argv;
-	if (argc != 1)
-		exception_message("./server [NO ARGUMENTS]");
-	g_server_act.sa_flags = SA_SIGINFO;
-	g_server_act.sa_sigaction = hdr_client_with_connection;
-	sigemptyset(&g_server_act.sa_mask);
-	sigaction(SIGUSR1, &g_server_act, NULL);
-	sigaction(SIGUSR2, &g_server_act, NULL);
-	ft_putstr_fd("[SERVER PID : ", 1);
-	ft_putnbr_fd(getpid(), 1);
-	ft_putstr_lf("]");
-	while (1)
-		pause();
+	char	lf;
+
+	lf = '\n';
+	while (str && *str != '\0')
+	{
+		write(1, str++, 1);
+	}
+	write(1, &lf, 1);
 }

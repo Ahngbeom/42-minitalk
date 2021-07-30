@@ -3,22 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bahn <bahn@student.42seoul.kr>             +#+  +:+       +#+        */
+/*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/12/30 14:23:07 by bahn              #+#    #+#             */
-/*   Updated: 2021/01/02 13:53:32 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/30 21:04:08 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(char *c, int fd)
+void	ft_putstr_fd(char *str, int fd)
 {
 	if (fd < 0)
 		return ;
-	while (c && *c != '\0')
+	while (str && *str != '\0')
 	{
-		write(fd, c++, 1);
+		write(fd, str++, 1);
 	}
-	ft_putchar_fd('\n', 1);
 }

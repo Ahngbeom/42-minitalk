@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 23:06:18 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/17 20:45:05 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/30 21:04:54 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,8 @@ void	ft_send_message(void);
 // Exception Handler
 void	exception_message(char *exception);
 int		exception_kill(int rtn);
+
+// Printing Message
+void	ft_putstr_lf(char *str);
 
 #endif

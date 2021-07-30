@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/14 22:18:49 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/18 15:38:25 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/30 21:08:45 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,13 @@ void	hdr_client_with_connection(int signo, siginfo_t *siginfo, void *context)
 	(void)context;
 	if (signo == SIGUSR1)
 	{
-		ft_putstr_fd("Client(", 1);
 		ft_putnbr_fd(siginfo->si_pid, 1);
-		ft_putstr_fd(") with Connection : SUCCESS\n", 1);
+		ft_putstr_fd(" : ", 1);
 		g_server_data.opponent_pid = siginfo->si_pid;
 		g_server_data.msg = ft_strdup("");
-		server_act.sa_sigaction = hdr_receive_message;
-		sigaction(SIGUSR1, &server_act, NULL);
-		sigaction(SIGUSR2, &server_act, NULL);
+		g_server_act.sa_sigaction = hdr_receive_message;
+		sigaction(SIGUSR1, &g_server_act, NULL);
+		sigaction(SIGUSR2, &g_server_act, NULL);
 		exception_kill(kill(siginfo->si_pid, siginfo->si_signo));
 	}
 	else if (signo == SIGUSR2)
@@ -51,11 +50,11 @@ void	hdr_receive_message(int signo, siginfo_t *siginfo, void *context)
 			g_server_data.msg = ft_charjoin(g_server_data.msg, ch);
 		else
 		{
-			ft_putstr_fd(g_server_data.msg, 1);
+			ft_putstr_lf(g_server_data.msg);
 			free(g_server_data.msg);
-			server_act.sa_sigaction = hdr_client_with_connection;
-			sigaction(SIGUSR1, &server_act, NULL);
-			sigaction(SIGUSR2, &server_act, NULL);
+			g_server_act.sa_sigaction = hdr_client_with_connection;
+			sigaction(SIGUSR1, &g_server_act, NULL);
+			sigaction(SIGUSR2, &g_server_act, NULL);
 			exception_kill(kill(siginfo->si_pid, SIGUSR2));
 		}
 		bit = 8;

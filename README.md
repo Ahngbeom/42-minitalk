@@ -1,6 +1,22 @@
 
 # <span style="color:yellow"/>Minitalk
 
+## <span style="color:#00AA00"/>Guacamole SSH 평가
+
+원격으로 평가하기 위해서는 과카몰리 SSH 터미널 화면을 2개 이상으로 분리해야한다.
+
+```
+rm -rf $HOME/.brew && git clone --depth=1 https://github.com/Homebrew/brew $HOME/.brew && echo 'export PATH=$HOME/.brew/bin:$PATH' >> $HOME/.zshrc && source $HOME/.zshrc && brew update
+```
+
+```
+brew install tmux
+```
+
+[tmux 사용법](https://velog.io/@ur-luella/tmux-%EC%82%AC%EC%9A%A9%EB%B2%95)
+
+---
+
 ## <span style="color:#00FF00"/>Execution
 
 1.	`make` or `make all` or `make bonus`
@@ -9,6 +25,8 @@
 
 3.	`bash ./client [SERVER PID] [SEND MESSAGE]`
 ---
+
+
 ## <span style="color:#FA5882"/>과제 요구 조건
 
 -	클라이언트가 실행될 때에 PID를 표시해야 한다.
@@ -423,12 +441,4 @@
 			안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요
 
 
-# Guacamole SSH 평가
 
-원격으로 평가하기 위해서는 과카몰리 SSH 터미널 화면을 2개 이상으로 분리해야한다.
-
-> `rm -rf $HOME/.brew && git clone --depth=1 https://github.com/Homebrew/brew $HOME/.brew && echo 'export PATH=$HOME/.brew/bin:$PATH' >> $HOME/.zshrc && source $HOME/.zshrc && brew update`
-
-> `brew install tmux`
-
-[tmux 사용법](https://velog.io/@ur-luella/tmux-%EC%82%AC%EC%9A%A9%EB%B2%95)

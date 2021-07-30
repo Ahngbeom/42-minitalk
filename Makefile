@@ -6,7 +6,7 @@
 #    By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/16 19:22:48 by bahn              #+#    #+#              #
-#    Updated: 2021/07/17 22:27:30 by bahn             ###   ########.fr        #
+#    Updated: 2021/07/30 21:05:36 by bahn             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,8 +26,8 @@ LIBFT_SRCS			= $(addprefix $(LIBFT_PATH), $(LIBFT_FILES))
 LIBFT_OBJS			= $(LIBFT_SRCS:.c=.o)
 
 SRCS_PATH			= ./srcs
-SERVER_FILES 		= server.c server_handler.c ft_charjoin.c
-CLIENT_FILES 		= client.c client_handler.c
+SERVER_FILES 		= server.c server_handler.c ft_charjoin.c ft_putstr_lf.c
+CLIENT_FILES 		= client.c client_handler.c ft_putstr_lf.c
 EXCEPTION_FILES		= exception_handler.c
 SERVER_SRCS			= $(addprefix $(addsuffix /, $(SRCS_PATH)), $(SERVER_FILES) $(EXCEPTION_FILES))
 SERVER_SRCS_BONUS	= $(addprefix $(addsuffix _bonus/, $(SRCS_PATH)), $(patsubst %.c, %_bonus.c, $(SERVER_FILES) $(EXCEPTION_FILES)))

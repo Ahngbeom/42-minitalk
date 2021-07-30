@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 17:45:23 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/18 16:42:02 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/30 21:19:10 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ int	main(int argc, char **argv)
 {
 	if (argc != 3)
 		exception_message("./client [SERVER PID] [SEND MESSAGE]");
-	client_act.sa_flags = SA_SIGINFO;
-	client_act.sa_sigaction = hdr_server_with_connection;
-	sigemptyset(&client_act.sa_mask);
-	sigaction(SIGUSR1, &client_act, NULL);
-	sigaction(SIGUSR2, &client_act, NULL);
+	g_client_act.sa_flags = SA_SIGINFO;
+	g_client_act.sa_sigaction = hdr_server_with_connection;
+	sigemptyset(&g_client_act.sa_mask);
+	sigaction(SIGUSR1, &g_client_act, NULL);
+	sigaction(SIGUSR2, &g_client_act, NULL);
+	ft_putstr_fd("[CLIENT PID : ", 1);
 	ft_putnbr_fd(getpid(), 1);
-	ft_putchar_fd('\n', 1);
+	ft_putstr_lf("]");
 	g_client_data.opponent_pid = ft_atoi(argv[1]);
 	g_client_data.msg = argv[2];
 	ft_connection();

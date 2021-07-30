@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 22:42:41 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/17 20:57:14 by bahn             ###   ########.fr       */
+/*   Updated: 2021/07/30 21:18:03 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	hdr_server_with_connection(int signo, siginfo_t *siginfo, void *context)
 	(void)context;
 	if (signo == SIGUSR1)
 	{
-		ft_putstr_fd("Server with Connection : SUCCESS\n", 1);
-		client_act.sa_sigaction = hdr_send_message;
-		sigaction(SIGUSR1, &client_act, NULL);
-		sigaction(SIGUSR2, &client_act, NULL);
+		ft_putstr_lf("SERVER with Connection : SUCCESS");
+		g_client_act.sa_sigaction = hdr_send_message;
+		sigaction(SIGUSR1, &g_client_act, NULL);
+		sigaction(SIGUSR2, &g_client_act, NULL);
 		ft_send_message();
 	}
 	else if (signo == SIGUSR2)
@@ -36,7 +36,7 @@ void	hdr_send_message(int signo, siginfo_t *siginfo, void *context)
 	(void)context;
 	if (signo == SIGUSR2)
 	{
-		ft_putstr_fd("Send Message to SERVER : SUCCESS\n", 1);
+		ft_putstr_lf("Send Message to SERVER : SUCCESS");
 		exit(0);
 	}
 	else
