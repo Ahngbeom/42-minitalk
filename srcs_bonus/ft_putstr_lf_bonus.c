@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exception_handler_bonus.c                          :+:      :+:    :+:   */
+/*   ft_putstr_lf_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 20:06:53 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/30 21:25:15 by bahn             ###   ########.fr       */
+/*   Created: 2020/12/30 14:23:07 by bahn              #+#    #+#             */
+/*   Updated: 2021/07/30 21:25:19 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk_bonus.h"
 
-void	exception_message(char *exception)
+void	ft_putstr_lf(char *str)
 {
-	ft_putstr_fd("ERROR : ", 1);
-	ft_putstr_fd(exception, 1);
-	ft_putchar_fd('\n', 1);
-	exit(1);
-}
+	char	lf;
 
-int	exception_kill(int rtn)
-{
-	if (rtn == 0)
+	lf = '\n';
+	while (str && *str != '\0')
 	{
-		usleep(125);
-		return (0);
+		write(1, str++, 1);
 	}
-	else
-	{
-		exception_message("INVALID PID or KILL ERROR");
-		exit(1);
-	}
+	write(1, &lf, 1);
 }
