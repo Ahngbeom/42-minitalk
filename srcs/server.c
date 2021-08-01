@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 22:42:29 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/30 21:19:06 by bahn             ###   ########.fr       */
+/*   Updated: 2021/08/01 23:13:48 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	main(int argc, char **argv)
 {
 	(void)argv;
 	if (argc != 1)
-		exception_message("./server [NO ARGUMENTS]");
+		exception("./server [NO ARGUMENTS REQUIRED]");
 	g_server_act.sa_flags = SA_SIGINFO;
-	g_server_act.sa_sigaction = hdr_client_with_connection;
+	g_server_act.sa_sigaction = hdr_connection_with_client;
 	sigemptyset(&g_server_act.sa_mask);
 	sigaction(SIGUSR1, &g_server_act, NULL);
 	sigaction(SIGUSR2, &g_server_act, NULL);

@@ -6,7 +6,7 @@
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/15 23:06:18 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/30 21:25:28 by bahn             ###   ########.fr       */
+/*   Updated: 2021/08/01 23:08:45 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,12 @@ struct sigaction	g_client_act;
 
 typedef struct s_data
 {
-	pid_t			opponent_pid;
+	pid_t			pid;
 	char			*msg;
 }			t_data;
 
-extern t_data		g_server_data;
-extern t_data		g_client_data;
-
 // Server Handler
-void	hdr_client_with_connection(int signo, \
+void	hdr_connection_with_client(int signo, \
 		siginfo_t *siginfo, void *context);
 void	hdr_receive_message(int signo, siginfo_t *siginfo, void *context);
 
@@ -38,19 +35,21 @@ void	hdr_receive_message(int signo, siginfo_t *siginfo, void *context);
 char	*ft_charjoin(char *str, char ch);
 
 // Client Handler
-void	hdr_server_with_connection(int signo, \
+void	hdr_connection_with_server(int signo, \
 		siginfo_t *siginfo, void *context);
 void	hdr_send_message(int signo, siginfo_t *siginfo, void *context);
 
 // Client Function
-void	ft_server_with_connection(pid_t pid);
+void	ft_connection_with_server(int signo);
 void	ft_send_message(void);
 
-// Exception Handler
-void	exception_message(char *exception);
-int		exception_kill(int rtn);
+//	My KILL Function
+void	ft_kill(pid_t pid, int signo);
 
-// Printing Message
+// Printing Exception Info
+void	exception(char *exception);
+
+// Printing Message with LineFeed
 void	ft_putstr_lf(char *str);
 
 #endif

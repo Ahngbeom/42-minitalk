@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exception_handler_bonus.c                          :+:      :+:    :+:   */
+/*   ft_kill.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bahn <bbu0704@gmail.com>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/17 20:06:53 by bahn              #+#    #+#             */
-/*   Updated: 2021/07/30 21:25:15 by bahn             ###   ########.fr       */
+/*   Created: 2021/08/01 22:35:34 by bahn              #+#    #+#             */
+/*   Updated: 2021/08/01 23:14:33 by bahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_bonus.h"
+#include "minitalk.h"
 
-void	exception_message(char *exception)
+void	ft_kill(pid_t pid, int signo)
 {
-	ft_putstr_fd("ERROR : ", 1);
-	ft_putstr_fd(exception, 1);
-	ft_putchar_fd('\n', 1);
-	exit(1);
-}
-
-int	exception_kill(int rtn)
-{
-	if (rtn == 0)
+	if (kill(pid, signo) != 0)
 	{
-		usleep(125);
-		return (0);
-	}
-	else
-	{
-		exception_message("INVALID PID or KILL ERROR");
+		exception("INVALID PID or KILL ERROR");
 		exit(1);
 	}
+	else
+		usleep(125);
 }
