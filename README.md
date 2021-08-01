@@ -5,10 +5,12 @@
 
 원격으로 평가하기 위해서는 과카몰리 SSH 터미널 화면을 2개 이상으로 분리해야한다.
 
+- brew 설치 (MacOS용 패키지 관리 애플리케이션)
 ```
 rm -rf $HOME/.brew && git clone --depth=1 https://github.com/Homebrew/brew $HOME/.brew && echo 'export PATH=$HOME/.brew/bin:$PATH' >> $HOME/.zshrc && source $HOME/.zshrc && brew update
 ```
 
+- tmux 패키지 설치 (터미널 세션을 생성하여 여러 개의 창 또는 틀을 생성할 수 있음)
 ```
 brew install tmux
 ```
@@ -87,7 +89,7 @@ brew install tmux
 	<span style="color:red; font-weight: bold;">SA_SIGINFO</span>플래그는 시그널 처리기(핸들러)가 하나가 아닌 3개의 인자를 취할경우<br>
 	sa_handler대신 sa_sigaction의 siginfo_t를 이용할 수 있다. <br>siginto_t는 다음과 같이 정의된 구조체이다.
 
-	```c
+	```C
 	siginfo_t {
 		int      si_signo;  /* 시그널 넘버 */
 		int      si_errno;  /* errno 값 */
