@@ -1,3 +1,4 @@
+# Minitalk [![bahn's 42Project Score](https://badge42.herokuapp.com/api/project/bahn/minitalk)](https://github.com/JaeSeoKim/badge42)
 
 # <span style="color:yellow"/>Minitalk
 
