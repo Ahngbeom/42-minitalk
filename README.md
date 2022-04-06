@@ -1,5 +1,4 @@
-# Minitalk [![bahn's 42Project Score](https://badge42.herokuapp.com/api/project/bahn/minitalk)](https://github.com/JaeSeoKim/badge42)
-
+# Minitalk [![bahn's 42 minitalk Score](https://badge42.vercel.app/api/v2/cl1n6fb2j003009l0lfanbfyx/project/2198518)](https://github.com/JaeSeoKim/badge42)
 # <span style="color:yellow"/>Minitalk
 
 ## <span style="color:#00AA00"/>Guacamole SSH 평가
